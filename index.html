@@ -1,0 +1,60 @@
+import React, { useState } from "react";
+
+export default function MoodTracker() {
+  const [mood, setMood] = useState("");
+  const [history, setHistory] = useState([]);
+
+  const suggestions = {
+    happy: ["Share your joy with a friend", "Go for a walk in the park", "Listen to upbeat music"],
+    sad: ["Call someone you trust", "Write down your feelings", "Watch a comforting movie"],
+    stressed: ["Try deep breathing exercises", "Take a short break", "Do some stretching"],
+    tired: ["Get some rest", "Drink water", "Go for a light stroll"],
+    motivated: ["Start that project you've been planning", "Organize your workspace", "Read something inspiring"]
+  };
+
+  const addMood = () => {
+    if (!mood) return;
+    setHistory([{ mood, time: new Date().toLocaleTimeString() }, ...history]);
+    setMood("");
+  };
+
+  return (
+    <div className="min-h-screen bg-gray-50 p-6">
+      <h1 className="text-3xl font-bold text-center mb-6">Live Mood Tracker</h1>
+
+      <div className="flex gap-2 justify-center mb-6">
+        <input
+          placeholder="How do you feel?"
+          value={mood}
+          onChange={(e) => setMood(e.target.value.toLowerCase())}
+          className="border p-2 rounded w-64"
+        />
+        <button
+          onClick={addMood}
+          className="bg-blue-600 text-white px-4 py-2 rounded"
+        >
+          Log Mood
+        </button>
+      </div>
+
+      {history.length > 0 && (
+        <div className="space-y-4">
+          {history.map((entry, i) => (
+            <div key={i} className="bg-white p-4 rounded shadow">
+              <p className="font-semibold">
+                {entry.time}: {entry.mood}
+              </p>
+              {suggestions[entry.mood] && (
+                <ul className="list-disc ml-6 mt-2 text-sm text-gray-700">
+                  {suggestions[entry.mood].map((s, idx) => (
+                    <li key={idx}>{s}</li>
+                  ))}
+                </ul>
+              )}
+            </div>
+          ))}
+        </div>
+      )}
+    </div>
+  );
+}
